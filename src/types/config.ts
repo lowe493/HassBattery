@@ -35,4 +35,5 @@ export interface BatteryConfig {
   voltage_entity: string;
   power_entity: string;
   status_entity: string;
+  layout: 'vertical' | 'horizontal_compact';
 }

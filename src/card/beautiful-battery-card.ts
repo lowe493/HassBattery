@@ -31,6 +31,7 @@ const DEFAULT_CONFIG: BatteryConfig = {
   voltage_entity: '',
   power_entity: '',
   status_entity: '',
+  layout: 'vertical',
 };
 
 const SIZE_MAP = { tiny: 100, small: 140, medium: 200, large: 260 };
@@ -93,6 +94,64 @@ class BeautifulBatteryCard extends LitElement {
       transform-style: preserve-3d;
       transition: transform 0.1s ease-out;
     }
+
+    .battery-wrapper.horizontal-compact {
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-template-rows: auto auto auto;
+      align-items: center;
+      justify-content: center;
+      column-gap: 14px;
+      row-gap: 5px;
+    }
+
+    .battery-wrapper.horizontal-compact .battery-outer {
+      grid-column: 1;
+      grid-row: 1;
+      width: var(--bb-horizontal-width);
+      height: var(--bb-horizontal-height);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .battery-wrapper.horizontal-compact .drops-area {
+      width: var(--bb-horizontal-width);
+      height: var(--bb-horizontal-height);
+      align-items: center;
+    }
+
+    .battery-wrapper.horizontal-compact .battery-rotator {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) rotate(90deg);
+      transform-origin: center;
+    }
+
+    .battery-wrapper.horizontal-compact .battery-info {
+      display: contents;
+    }
+
+    .battery-wrapper.horizontal-compact .battery-name {
+      display: none;
+    }
+
+    .battery-wrapper.horizontal-compact .battery-percentage {
+      grid-column: 2;
+      grid-row: 1;
+      white-space: nowrap;
+    }
+
+    .battery-wrapper.horizontal-compact .battery-status,
+    .battery-wrapper.horizontal-compact .battery-details {
+      grid-column: 1 / -1;
+      text-align: center;
+      justify-self: center;
+    }
+
+    .battery-wrapper.horizontal-compact .battery-status { grid-row: 2; }
+    .battery-wrapper.horizontal-compact .battery-details { grid-row: 3; }
 
     .battery-wrapper:not(.mouse-active) .battery-outer {
       animation: bb-float 4s ease-in-out infinite;
@@ -806,7 +865,7 @@ class BeautifulBatteryCard extends LitElement {
           <div class="battery-outer" style="transform: rotateX(2deg) rotateY(0deg);">
             <div class="drops-area">
               <div class="drops-above"></div>
-              <div>
+              <div class="battery-rotator">
                 <div class="battery-shell" style="width:${bodyW}px; height:${totalH}px;">
                   <div class="charge-glow"
                        style="transform: translateY(50%); background: ${color}; opacity: ${glowIntensity}; filter: blur(${12 + glowIntensity * 20}px); box-shadow: 0 0 ${20 + glowIntensity * 30}px ${color};">
@@ -919,7 +978,8 @@ class BeautifulBatteryCard extends LitElement {
 
     return html`
       <ha-card>
-        <div class="battery-wrapper ${this._mouseActive ? 'mouse-active' : ''} ${!this._anim('float') ? 'no-float' : ''}"
+        <div class="battery-wrapper ${this._config.layout === 'horizontal_compact' ? 'horizontal-compact' : ''} ${this._mouseActive ? 'mouse-active' : ''} ${!this._anim('float') ? 'no-float' : ''}"
+             style="${this._config.layout === 'horizontal_compact' ? `--bb-horizontal-width:${totalH}px;--bb-horizontal-height:${bodyW}px;` : ''}"
              @pointermove=${this._onPointerMove}
              @pointerleave=${this._onPointerLeave}
              @click=${this._handleTap}>
@@ -938,7 +998,7 @@ class BeautifulBatteryCard extends LitElement {
                 `) : nothing}
               </div>
 
-              <div>
+              <div class="battery-rotator">
                 <div class="battery-shell" style="width:${bodyW}px; height:${totalH}px; clip-path: ${shellClip};">
                   <div class="charge-glow"
                        style="transform: translateY(${100 - pct}%); background: ${color}; opacity: ${glowIntensity}; filter: blur(${12 + glowIntensity * 20}px); box-shadow: 0 0 ${20 + glowIntensity * 30}px ${color};">

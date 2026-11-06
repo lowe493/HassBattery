@@ -26,6 +26,7 @@ const DEFAULT_EDITOR_CONFIG: BatteryConfig = {
   voltage_entity: '',
   power_entity: '',
   status_entity: '',
+  layout: 'vertical',
 };
 
 const STRINGS: Record<string, Record<string, string>> = {
@@ -41,6 +42,9 @@ const STRINGS: Record<string, Record<string, string>> = {
     size_large: 'Grande (260px)',
     glow: 'Intensita bagliore',
     display: 'Visualizzazione',
+    layout: 'Disposizione',
+    layout_vertical: 'Verticale',
+    layout_horizontal_compact: 'Orizzontale – compatta',
     show_pct: 'Mostra percentuale',
     show_status: 'Mostra stato',
     show_voltage: 'Mostra voltaggio',
@@ -87,6 +91,9 @@ const STRINGS: Record<string, Record<string, string>> = {
     size_large: 'Large (260px)',
     glow: 'Glow intensity',
     display: 'Display',
+    layout: 'Layout',
+    layout_vertical: 'Vertical',
+    layout_horizontal_compact: 'Horizontal – Compact',
     show_pct: 'Show percentage',
     show_status: 'Show status',
     show_voltage: 'Show voltage',
@@ -280,6 +287,14 @@ class BeautifulBatteryEditor extends LitElement {
 
         <section class="section">
           <div class="section-title">${this._t('appearance')}</div>
+          <div class="field">
+            <label class="field-label">${this._t('layout')}</label>
+            <select .value=${this._config.layout ?? 'vertical'}
+                    @change=${(e: Event) => this._update('layout', (e.target as HTMLSelectElement).value)}>
+              <option value="vertical">${this._t('layout_vertical')}</option>
+              <option value="horizontal_compact">${this._t('layout_horizontal_compact')}</option>
+            </select>
+          </div>
           <div class="field">
             <label class="field-label">${this._t('size')}</label>
             <select .value=${this._config.size}

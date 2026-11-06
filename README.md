@@ -135,3 +135,8 @@ over `power_entity` and the battery entity's built-in charging attributes. If
 the status entity is unavailable or has an unrecognized state, the card falls
 back to its existing power/battery-state detection. You can select the status
 entity in the visual card editor under Display.
+
+
+### Layout
+
+The card supports a vertical layout (default) and a Horizontal – Compact layout. In the compact layout the battery is displayed horizontally, the percentage sits beside it, and the status is centred underneath. Choose the layout in the visual editor or set `layout: horizontal_compact`.
